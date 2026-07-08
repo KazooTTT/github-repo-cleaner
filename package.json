@@ -1,6 +1,6 @@
 {
   "name": "@kazoottt/github-repo-cleaner",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Local TUI for cleaning GitHub repositories with gh authentication.",
   "type": "module",
   "bin": {
