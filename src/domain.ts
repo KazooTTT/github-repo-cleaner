@@ -1,4 +1,5 @@
 export type OperationMode = "archive" | "delete";
+export type SortDirection = "oldest" | "newest";
 
 export type RepositorySummary = {
   id: number;
@@ -52,12 +53,33 @@ export type SessionLog = {
   }>;
 };
 
-export function sortByPushedAt(repositories: RepositorySummary[]): RepositorySummary[] {
+export function sortByPushedAt(
+  repositories: RepositorySummary[],
+  direction: SortDirection = "oldest"
+): RepositorySummary[] {
   return [...repositories].sort((a, b) => {
     const aTime = a.pushedAt ? Date.parse(a.pushedAt) : 0;
     const bTime = b.pushedAt ? Date.parse(b.pushedAt) : 0;
-    return aTime - bTime;
+    return direction === "oldest" ? aTime - bTime : bTime - aTime;
   });
+}
+
+export function formatPushedAt(value: string | null): string {
+  if (!value) return "never";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  const formatter = new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+
+  return formatter.format(date);
 }
 
 export function filterRepositories(

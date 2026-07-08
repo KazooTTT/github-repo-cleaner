@@ -2,8 +2,8 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Box, Text, useApp, useInput} from "ink";
 import type {GitHubApi} from "./github.js";
 import {computeRiskFlags} from "./github.js";
-import type {OperationMode, OperationResult, RepositorySummary, RiskFlag} from "./domain.js";
-import {filterRepositories, sortByPushedAt} from "./domain.js";
+import type {OperationMode, OperationResult, RepositorySummary, RiskFlag, SortDirection} from "./domain.js";
+import {filterRepositories, formatPushedAt, sortByPushedAt} from "./domain.js";
 import {writeSessionLog} from "./session-log.js";
 
 export type AppProps = {
@@ -22,6 +22,7 @@ export function App({api, owner: requestedOwner, writeLog = writeSessionLog}: Ap
   const [cursor, setCursor] = useState(0);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [forksOnly, setForksOnly] = useState(false);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("oldest");
   const [query, setQuery] = useState("");
   const [searching, setSearching] = useState(false);
   const [mode, setMode] = useState<OperationMode>("archive");
@@ -54,8 +55,8 @@ export function App({api, owner: requestedOwner, writeLog = writeSessionLog}: Ap
   }, [api, requestedOwner]);
 
   const visibleRepositories = useMemo(
-    () => filterRepositories(sortByPushedAt(repositories), {query, forksOnly}),
-    [repositories, query, forksOnly]
+    () => filterRepositories(sortByPushedAt(repositories, sortDirection), {query, forksOnly}),
+    [repositories, sortDirection, query, forksOnly]
   );
 
   const selectedRepositories = useMemo(
@@ -99,6 +100,7 @@ export function App({api, owner: requestedOwner, writeLog = writeSessionLog}: Ap
       if (key.upArrow) setCursor((current) => Math.max(0, current - 1));
       if (key.downArrow) setCursor((current) => Math.min(visibleRepositories.length - 1, current + 1));
       if (input === "f") setForksOnly((current) => !current);
+      if (input === "s") setSortDirection((current) => current === "oldest" ? "newest" : "oldest");
       if (input === "/") setSearching(true);
       if (input === "a") setMode("archive");
       if (input === "d") setMode("delete");
@@ -170,15 +172,15 @@ export function App({api, owner: requestedOwner, writeLog = writeSessionLog}: Ap
 
   return (
     <Box flexDirection="column">
-      <Text>github-repo-cleaner owner:{owner} mode:{mode} selected:{selectedIds.size}</Text>
-      <Text>[up/down] move  [space] select  [f] forks only:{forksOnly ? "on" : "off"}  [/] search  [a] archive  [d] delete  [enter] review  [q] quit</Text>
+      <Text>github-repo-cleaner owner:{owner} mode:{mode} sort:{sortDirection} selected:{selectedIds.size}</Text>
+      <Text>[up/down] move  [space] select  [f] forks only:{forksOnly ? "on" : "off"}  [s] sort  [/] search  [a] archive  [d] delete  [enter] review  [q] quit</Text>
       <Text>search:{searching ? `${query}_` : query || "-"}</Text>
       {visibleRepositories.slice(Math.max(0, cursor - 5), cursor + 15).map((repository) => {
         const active = visibleRepositories[cursor]?.id === repository.id;
         const selected = selectedIds.has(repository.id);
         return (
           <Text key={repository.id} color={active ? "cyan" : undefined}>
-            {active ? ">" : " "} {selected ? "[x]" : "[ ]"} {repository.fork ? "fork" : "src "} {repository.fullName} pushed:{repository.pushedAt ?? "never"} {repository.fork ? `upstream:${repository.upstreamFullName ?? "missing"}` : ""}
+            {active ? ">" : " "} {selected ? "[x]" : "[ ]"} {repository.fork ? "fork" : "own "} {repository.fullName} pushed:{formatPushedAt(repository.pushedAt)} {repository.fork ? `upstream:${repository.upstreamFullName ?? "missing"}` : ""}
           </Text>
         );
       })}

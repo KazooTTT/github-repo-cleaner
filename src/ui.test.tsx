@@ -31,7 +31,22 @@ describe("App", () => {
     await vi.waitFor(() => expect(instance.lastFrame()).toContain("me/old-fork"));
 
     expect(instance.lastFrame()).toContain("fork me/old-fork");
+    expect(instance.lastFrame()).toContain("own  me/private-app");
+    expect(instance.lastFrame()).toContain("pushed:2024-01-01");
+    expect(instance.lastFrame()).not.toContain("T00:00:00Z");
     expect(instance.lastFrame()).toContain("upstream:up/source");
+  });
+
+  it("toggles pushed date sorting with s", async () => {
+    const instance = render(<App api={makeApi()} writeLog={vi.fn(async () => "/tmp/log.json")} />);
+
+    await vi.waitFor(() => expect(instance.lastFrame()).toContain("sort:oldest"));
+    expect(instance.lastFrame()).toContain("> [ ] fork me/old-fork");
+    await nextTick();
+    instance.stdin.write("s");
+
+    await vi.waitFor(() => expect(instance.lastFrame()).toContain("sort:newest"));
+    expect(instance.lastFrame()).toContain("> [ ] own  me/private-app");
   });
 
   it("loads an explicit owner scope when provided", async () => {
@@ -69,7 +84,10 @@ describe("App", () => {
     await nextTick();
     instance.stdin.write("d");
     instance.stdin.write(" ");
-    await vi.waitFor(() => expect(instance.lastFrame()).toContain("mode:delete selected:1"));
+    await vi.waitFor(() => {
+      expect(instance.lastFrame()).toContain("mode:delete");
+      expect(instance.lastFrame()).toContain("selected:1");
+    });
     instance.stdin.write("\n");
 
     await vi.waitFor(() => expect(instance.lastFrame()).toContain("DELETE 1 repositories"));
