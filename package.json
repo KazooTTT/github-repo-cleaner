@@ -1,0 +1,33 @@
+{
+  "name": "github-repo-cleaner",
+  "version": "0.1.0",
+  "description": "Local TUI for cleaning GitHub repositories with gh authentication.",
+  "type": "module",
+  "bin": {
+    "github-repo-cleaner": "dist/cli.js",
+    "repo-cleaner": "dist/cli.js"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.tsx",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@octokit/rest": "latest",
+    "ink": "latest",
+    "react": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "ink-testing-library": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
