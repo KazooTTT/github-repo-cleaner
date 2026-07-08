@@ -93,10 +93,12 @@ Setup steps:
    - Repository: `github-repo-cleaner`
    - Workflow filename: `publish.yml`
    - Environment name: leave empty unless the workflow is changed to use one
-5. Run `npm run release` locally.
-6. Confirm the pushed tag triggers the `Publish` workflow in GitHub Actions.
+5. For the first publish only, run `npm publish --access public` locally to create the package.
+6. Add the trusted publisher in the package settings.
+7. For later releases, run `npm run release` locally.
+8. Confirm the pushed tag triggers the `Publish` workflow in GitHub Actions.
 
-The publish workflow runs:
+After trusted publishing is configured, the publish workflow runs:
 
 ```bash
 npm ci
