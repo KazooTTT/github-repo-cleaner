@@ -1,5 +1,10 @@
 # github-repo-cleaner
 
+[![npm version](https://img.shields.io/npm/v/@kazoottt/github-repo-cleaner?color=orange)](https://www.npmjs.com/package/@kazoottt/github-repo-cleaner)
+[![npm downloads](https://img.shields.io/npm/dm/@kazoottt/github-repo-cleaner)](https://www.npmjs.com/package/@kazoottt/github-repo-cleaner)
+[![publish](https://github.com/KazooTTT/github-repo-cleaner/actions/workflows/publish.yml/badge.svg)](https://github.com/KazooTTT/github-repo-cleaner/actions/workflows/publish.yml)
+[![license](https://img.shields.io/npm/l/@kazoottt/github-repo-cleaner)](./LICENSE)
+
 Local terminal UI for cleaning GitHub repositories.
 
 The tool reuses GitHub CLI authentication, loads repositories for the active GitHub user, makes forks easy to identify, and supports archive/delete workflows with a page-level second confirmation.
@@ -87,7 +92,7 @@ Setup steps:
 
 1. Push this repository to GitHub as `KazooTTT/github-repo-cleaner`.
 2. Sign in to npm as the owner of the `@kazoottt` scope.
-3. Open the npm package settings for `@kazoottt/github-repo-cleaner`.
+3. Open the npm package access/settings page for `@kazoottt/github-repo-cleaner`: `https://www.npmjs.com/package/@kazoottt/github-repo-cleaner/access`.
 4. Add a trusted publisher with:
    - Owner: `KazooTTT`
    - Repository: `github-repo-cleaner`
