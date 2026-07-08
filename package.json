@@ -1,5 +1,5 @@
 {
-  "name": "github-repo-cleaner",
+  "name": "@kazoottt/github-repo-cleaner",
   "version": "0.1.0",
   "description": "Local TUI for cleaning GitHub repositories with gh authentication.",
   "type": "module",
@@ -12,7 +12,9 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepack": "npm run build",
+    "release": "npm test && npm run typecheck && npm run build && bumpp --commit \"chore(release): v%s\" --tag \"v%s\" --push"
   },
   "dependencies": {
     "@octokit/rest": "latest",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@types/node": "latest",
     "@types/react": "latest",
+    "bumpp": "^11.1.0",
     "ink-testing-library": "latest",
     "tsx": "latest",
     "typescript": "latest",
@@ -29,5 +32,23 @@
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KazooTTT/github-repo-cleaner.git"
+  },
+  "homepage": "https://github.com/KazooTTT/github-repo-cleaner#readme",
+  "bugs": {
+    "url": "https://github.com/KazooTTT/github-repo-cleaner/issues"
+  },
+  "license": "MIT"
 }
