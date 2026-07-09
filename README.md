@@ -98,10 +98,13 @@ Setup steps:
    - Repository: `github-repo-cleaner`
    - Workflow filename: `publish.yml`
    - Environment name: leave empty unless the workflow is changed to use one
-5. For the first publish only, run `npm publish --access public` locally to create the package.
+5. For the first publish only, either:
+   - Run `npm publish --access public` locally as the npm owner of the `@kazoottt` scope.
+   - Or add a temporary `NPM_TOKEN` repository secret with publish access and rerun the `Publish` workflow.
 6. Add the trusted publisher in the package settings.
-7. For later releases, run `npm run release` locally.
-8. Confirm the pushed tag triggers the `Publish` workflow in GitHub Actions.
+7. Remove the temporary `NPM_TOKEN` secret if you used one for bootstrap.
+8. For later releases, run `npm run release` locally.
+9. Confirm the pushed tag triggers the `Publish` workflow in GitHub Actions.
 
 After trusted publishing is configured, the publish workflow runs:
 
@@ -110,7 +113,7 @@ npm ci
 npm test
 npm run typecheck
 npm run build
-npm publish --provenance --access public
+npm publish
 ```
 
 ## Issue Tracker
